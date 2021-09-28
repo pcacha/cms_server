@@ -17,13 +17,13 @@ public class ArticleVM {
     private String text;
     private String documentName;
     private String username;
-    @JsonFormat(pattern = "dd.MM. yyyy")
+    @JsonFormat(pattern = "dd.M. yyyy")
     private Date publishedAt;
-    @JsonFormat(pattern = "dd.MM. yyyy")
+    @JsonFormat(pattern = "dd.M. yyyy")
     private Date createdAt;
     private String evaluation;
     private ArticleState state;
-    private boolean editable;
+    private Boolean editable;
     private Long authorId;
 
     public ArticleVM(Article article) {

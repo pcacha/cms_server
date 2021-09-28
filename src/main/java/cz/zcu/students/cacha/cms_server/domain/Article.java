@@ -1,20 +1,17 @@
 package cz.zcu.students.cacha.cms_server.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.zcu.students.cacha.cms_server.shared.ArticleState;
 import cz.zcu.students.cacha.cms_server.validators.PdfFile;
 import cz.zcu.students.cacha.cms_server.validators.UniqueArticleName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
@@ -43,32 +40,40 @@ public class Article {
     @PdfFile
     private String encodedDocument;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
     private User user;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd.mm. yyyy")
     private Date createdAt;
 
     @Enumerated(EnumType.STRING)
     private ArticleState state;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd.mm. yyyy")
     private Date publishedAt;
 
     private String evaluation;
 
-    @OneToMany(mappedBy = "article", fetch=FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonIgnore
-    private List<Review> reviews;
+    @OneToMany(mappedBy = "article", fetch=FetchType.LAZY)
+    private Set<Review> reviews;
 
     @PrePersist
     protected void onCreate()
     {
         createdAt = new Date();
         state = ArticleState.REVIEWED;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Article)) return false;
+        Article article = (Article) o;
+        return id.equals(article.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

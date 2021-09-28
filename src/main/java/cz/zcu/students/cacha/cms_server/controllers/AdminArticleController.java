@@ -4,26 +4,22 @@ import cz.zcu.students.cacha.cms_server.responses.GenericResponse;
 import cz.zcu.students.cacha.cms_server.services.ArticleService;
 import cz.zcu.students.cacha.cms_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-
-import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.ROLE_ADMIN;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/articlemanager")
-@Secured(ROLE_ADMIN)
 public class AdminArticleController {
 
     @Autowired
     private ArticleService articleService;
 
     @GetMapping
-    public List<ArticleToReviewVM> getArticlesToReview() {
-        List<ArticleVM> reviewed = articleService.getReviewedArticles();
-        List<ArticleToReviewVM> articlesToReview = articleService.attachReviewers(reviewed);
+    public Set<ArticleToReviewVM> getArticlesToReview() {
+        Set<ArticleVM> reviewed = articleService.getReviewedArticles();
+        Set<ArticleToReviewVM> articlesToReview = articleService.attachReviewers(reviewed);
         return articlesToReview;
     }
 
@@ -34,8 +30,8 @@ public class AdminArticleController {
     }
 
     @GetMapping("/reviewer/{articleId}")
-    public List<ReviewerVM> getReviewers(@PathVariable Long articleId) {
-        List<ReviewerVM> reviewers = articleService.getReviewers(articleId);
+    public Set<ReviewerVM> getReviewers(@PathVariable Long articleId) {
+        Set<ReviewerVM> reviewers = articleService.getReviewers(articleId);
         return reviewers;
     }
 
@@ -46,8 +42,8 @@ public class AdminArticleController {
     }
 
     @GetMapping("/reviews/{articleId}")
-    public List<ReviewVM> getArticleReviews(@PathVariable Long articleId) {
-        List<ReviewVM> reviews = articleService.getArticleReviews(articleId);
+    public Set<ReviewVM> getArticleReviews(@PathVariable Long articleId) {
+        Set<ReviewVM> reviews = articleService.getArticleReviews(articleId);
         return reviews;
     }
 }

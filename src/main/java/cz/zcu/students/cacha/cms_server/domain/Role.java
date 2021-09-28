@@ -1,13 +1,11 @@
 package cz.zcu.students.cacha.cms_server.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,12 +18,23 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)
-    @JsonIgnore
-    @Fetch(value = FetchMode.SUBSELECT)
-    private Collection<User> users;
+    @ManyToMany(mappedBy = "roles", fetch=FetchType.LAZY)
+    private Set<User> users;
 
     public Role(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role)) return false;
+        Role role = (Role) o;
+        return id.equals(role.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

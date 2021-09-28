@@ -16,11 +16,11 @@ import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.ROLE_REVIEW
 public class UserVM {
     private Long id;
     private String username;
-    @JsonFormat(pattern = "dd.MM. yyyy")
+    @JsonFormat(pattern = "dd.M. yyyy")
     private Date createdAt;
-    private boolean isAuthor;
-    private boolean isReviewer;
-    private boolean isBanned;
+    private Boolean isAuthor;
+    private Boolean isReviewer;
+    private Boolean isBanned;
 
     public UserVM(User user) {
         this.id = user.getId();
@@ -38,6 +38,6 @@ public class UserVM {
             }
         }
 
-        this.isBanned = user.isBanned();
+        this.isBanned = user.getBanned();
     }
 }

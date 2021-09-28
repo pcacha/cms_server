@@ -10,11 +10,7 @@ import cz.zcu.students.cacha.cms_server.repositories.UserRepository;
 import cz.zcu.students.cacha.cms_server.shared.ArticleState;
 import cz.zcu.students.cacha.cms_server.view_models.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import java.io.IOException;
 import java.util.*;
@@ -35,9 +31,9 @@ public class ArticleService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<ArticleVM> getPublished() {
-        List<Article> articles =  articleRepository.findByPublishedAtIsNotNullOrderByPublishedAtDesc();
-        List<ArticleVM> articleVMS = articles.stream().map(ArticleVM::new).collect(Collectors.toList());
+    public Set<ArticleVM> getPublished() {
+        Set<Article> articles =  articleRepository.findByPublishedAtIsNotNullOrderByPublishedAtDesc();
+        Set<ArticleVM> articleVMS = articles.stream().map(ArticleVM::new).collect(Collectors.toSet());
         return articleVMS;
     }
 
@@ -53,9 +49,9 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public List<ArticleVM> getMyArticles(User user) {
-        List<Article> articles =  articleRepository.findPersonalArticles(user.getId());
-        List<ArticleVM> articleVMS = articles.stream().map(ArticleVM::new).collect(Collectors.toList());
+    public Set<ArticleVM> getMyArticles(User user) {
+        Set<Article> articles =  articleRepository.findPersonalArticles(user.getId());
+        Set<ArticleVM> articleVMS = articles.stream().map(ArticleVM::new).collect(Collectors.toSet());
         return articleVMS;
     }
 
@@ -115,16 +111,16 @@ public class ArticleService {
         return new ArticleVM(article);
     }
 
-    public List<ArticleVM> getReviewedArticles() {
-        List<Article> reviewed = articleRepository.findByEvaluationIsNull();
-        return reviewed.stream().map(ArticleVM::new).collect(Collectors.toList());
+    public Set<ArticleVM> getReviewedArticles() {
+        Set<Article> reviewed = articleRepository.findByEvaluationIsNull();
+        return reviewed.stream().map(ArticleVM::new).collect(Collectors.toSet());
     }
 
-    public List<ArticleToReviewVM> attachReviewers(List<ArticleVM> reviewed) {
-        List<ArticleToReviewVM> toReview = new ArrayList();
+    public Set<ArticleToReviewVM> attachReviewers(Set<ArticleVM> reviewed) {
+        Set<ArticleToReviewVM> toReview = new HashSet<>();
 
         for(ArticleVM article : reviewed) {
-            List<User> notReviewers = userRepository.selectNotReviewers(article.getId(), article.getAuthorId());
+            Set<User> notReviewers = userRepository.selectNotReviewers(article.getId(), article.getAuthorId());
             ArticleToReviewVM articleToReviewVM = new ArticleToReviewVM(notReviewers.stream().map(ReviewerVM::new).collect(Collectors.toList()), article);
             toReview.add(articleToReviewVM);
         }
@@ -152,8 +148,8 @@ public class ArticleService {
         reviewRepository.save(review);
     }
 
-    public List<ReviewerVM> getReviewers(Long articleId) {
-        return userRepository.selectReviewers(articleId).stream().map(ReviewerVM::new).collect(Collectors.toList());
+    public Set<ReviewerVM> getReviewers(Long articleId) {
+        return userRepository.selectReviewers(articleId).stream().map(ReviewerVM::new).collect(Collectors.toSet());
     }
 
     public void addDecide(DecideVM decideVM) {
@@ -180,8 +176,8 @@ public class ArticleService {
         articleRepository.save(article);
     }
 
-    public List<ReviewVM> getArticleReviews(Long articleId) {
-        List<Review> reviews = reviewRepository.findByArticleId(articleId);
-        return reviews.stream().map(ReviewVM::new).collect(Collectors.toList());
+    public Set<ReviewVM> getArticleReviews(Long articleId) {
+        Set<Review> reviews = reviewRepository.findByArticleId(articleId);
+        return reviews.stream().map(ReviewVM::new).collect(Collectors.toSet());
     }
 }

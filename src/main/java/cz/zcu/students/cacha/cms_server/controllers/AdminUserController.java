@@ -5,25 +5,21 @@ import cz.zcu.students.cacha.cms_server.services.AdminUserService;
 import cz.zcu.students.cacha.cms_server.view_models.BooleanValVM;
 import cz.zcu.students.cacha.cms_server.view_models.UserVM;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-
-import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.ROLE_ADMIN;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/usermanager")
-@Secured(ROLE_ADMIN)
 public class AdminUserController {
 
     @Autowired
     private AdminUserService adminUserService;
 
     @GetMapping
-    public List<UserVM> getNonAdminUsers() {
-        List<UserVM> users = adminUserService.getNonAdminUsers();
+    public Set<UserVM> getNonAdminUsers() {
+        Set<UserVM> users = adminUserService.getNonAdminUsers();
         return users;
     }
 

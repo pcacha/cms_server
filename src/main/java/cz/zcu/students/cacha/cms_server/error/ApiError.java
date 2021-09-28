@@ -11,7 +11,7 @@ import java.util.Map;
 @NoArgsConstructor
 @JsonInclude(value= JsonInclude.Include.NON_NULL)
 public class ApiError {
-    private long timestamp = new Date().getTime();
+    private long timestamp;
 
     private int status;
 
@@ -25,5 +25,6 @@ public class ApiError {
         this.status = status;
         this.message = message;
         this.url = url;
+        this.timestamp = new Date().getTime();
     }
 }

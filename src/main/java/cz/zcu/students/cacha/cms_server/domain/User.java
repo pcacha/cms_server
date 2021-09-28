@@ -1,7 +1,5 @@
 package cz.zcu.students.cacha.cms_server.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import cz.zcu.students.cacha.cms_server.validators.UniqueUsername;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,10 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.*;
@@ -43,30 +38,24 @@ public class User implements UserDetails {
     private String password;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @JsonFormat(pattern = "dd.mm. yyyy")
     private Date createdAt;
 
-    private boolean banned;
-    private boolean deleted;
+    private Boolean banned;
+    private Boolean deleted;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonIgnore
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Article> articles;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Article> articles;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonIgnore
-    @Fetch(value = FetchMode.SUBSELECT)
-    private List<Review> reviews;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Review> reviews;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     @JoinTable(
             name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    @JsonIgnore
-    @Fetch(value = FetchMode.SUBSELECT)
-    private Collection<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
     @PrePersist
     protected void onCreate()
@@ -117,5 +106,18 @@ public class User implements UserDetails {
 
     public boolean isAdmin() {
         return getRoles().stream().map(Role::getName).collect(Collectors.toList()).contains(ROLE_ADMIN);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

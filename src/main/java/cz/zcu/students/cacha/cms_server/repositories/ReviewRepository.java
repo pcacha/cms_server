@@ -7,17 +7,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
-    List<Review> findByUserAndEvaluationIsNull(User user);
-    List<Review> findByUserAndEvaluationIsNotNull(User user);
+    Set<Review> findByUserAndEvaluationIsNull(User user);
+    Set<Review> findByUserAndEvaluationIsNotNull(User user);
     @Query(
             value = "select * from review r " +
                     "where article_id = :article_id and " +
                     "evaluation is not null",
             nativeQuery = true
     )
-    List<Review> findByArticleId(@Param("article_id") Long article_id);
+    Set<Review> findByArticleId(@Param("article_id") Long article_id);
 }

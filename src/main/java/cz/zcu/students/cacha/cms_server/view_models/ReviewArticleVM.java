@@ -3,7 +3,6 @@ package cz.zcu.students.cacha.cms_server.view_models;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import cz.zcu.students.cacha.cms_server.domain.Article;
 import cz.zcu.students.cacha.cms_server.domain.Review;
-import cz.zcu.students.cacha.cms_server.shared.ArticleState;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,9 +17,9 @@ public class ReviewArticleVM {
     private String text;
     private String documentName;
     private String username;
-    @JsonFormat(pattern = "dd.MM. yyyy")
+    @JsonFormat(pattern = "dd.M. yyyy")
     private Date publishedAt;
-    @JsonFormat(pattern = "dd.MM. yyyy")
+    @JsonFormat(pattern = "dd.M. yyyy")
     private Date createdAt;
 
     public ReviewArticleVM(Article article, Review review) {

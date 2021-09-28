@@ -12,7 +12,7 @@ import java.util.Date;
 public class ReviewerVM {
     private Long id;
     private String username;
-    @JsonFormat(pattern = "dd.MM. yyyy")
+    @JsonFormat(pattern = "dd.M. yyyy")
     private Date createdAt;
 
     public ReviewerVM(User user) {

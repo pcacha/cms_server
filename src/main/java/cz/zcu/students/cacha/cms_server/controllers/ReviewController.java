@@ -8,25 +8,21 @@ import cz.zcu.students.cacha.cms_server.shared.CurrentUser;
 import cz.zcu.students.cacha.cms_server.view_models.ReviewArticleVM;
 import cz.zcu.students.cacha.cms_server.view_models.ReviewVM;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-
-import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.ROLE_REVIEWER;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/reviews")
-@Secured(ROLE_REVIEWER)
 public class ReviewController {
 
     @Autowired
     private ReviewService reviewService;
 
     @GetMapping("/assigned")
-    public List<ReviewArticleVM> getAssignedReviews(@CurrentUser User user) {
-        List<ReviewArticleVM> assigned = reviewService.getAssigned(user);
+    public Set<ReviewArticleVM> getAssignedReviews(@CurrentUser User user) {
+        Set<ReviewArticleVM> assigned = reviewService.getAssigned(user);
         return assigned;
     }
 
@@ -37,8 +33,8 @@ public class ReviewController {
     }
 
     @GetMapping
-    public List<ReviewVM> getMyReviews(@CurrentUser User user) {
-        List<ReviewVM> myReviews = reviewService.getMyReviews(user);
+    public Set<ReviewVM> getMyReviews(@CurrentUser User user) {
+        Set<ReviewVM> myReviews = reviewService.getMyReviews(user);
         return myReviews;
     }
 

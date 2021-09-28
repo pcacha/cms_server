@@ -3,13 +3,11 @@ package cz.zcu.students.cacha.cms_server.services;
 import cz.zcu.students.cacha.cms_server.domain.User;
 import cz.zcu.students.cacha.cms_server.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service

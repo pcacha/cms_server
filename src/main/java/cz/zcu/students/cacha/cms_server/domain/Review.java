@@ -1,6 +1,5 @@
 package cz.zcu.students.cacha.cms_server.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -33,11 +33,22 @@ public class Review {
     @NotNull(message = "Doporučení nesmí být prázdné")
     private Boolean recommended;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
     private User user;
 
-    @ManyToOne(fetch=FetchType.EAGER)
-    @JsonIgnore
+    @ManyToOne(fetch=FetchType.LAZY)
     private Article article;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Review)) return false;
+        Review review = (Review) o;
+        return id.equals(review.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

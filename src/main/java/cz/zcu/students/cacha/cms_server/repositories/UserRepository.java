@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -19,8 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "join users_roles ur on r.id = ur.role_id " +
                     "where ur.user_id = u.id);",
             nativeQuery = true)
-    List<User> getNonAdminUsers();
-
+    Set<User> getNonAdminUsers();
     @Query(
             value = "select * from user us " +
                     "where us.id not in ( " +
@@ -31,8 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "and us.id != :author_id",
             nativeQuery = true
     )
-    List<User> selectNotReviewers(@Param("article_id") Long article_id, @Param("author_id") Long author_id);
-
+    Set<User> selectNotReviewers(@Param("article_id") Long article_id, @Param("author_id") Long author_id);
     @Query(
             value = "select * from user u " +
                     "join review r on r.user_id = u.id " +
@@ -40,5 +38,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "where a.id = :article_id",
             nativeQuery = true
     )
-    List<User> selectReviewers(@Param("article_id") Long article_id);
+    Set<User> selectReviewers(@Param("article_id") Long article_id);
 }

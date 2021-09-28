@@ -12,8 +12,8 @@ import cz.zcu.students.cacha.cms_server.view_models.ReviewVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,10 +22,10 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public List<ReviewArticleVM> getAssigned(User user) {
-        List<Review> reviews = reviewRepository.findByUserAndEvaluationIsNull(user);
-        reviews = reviews.stream().filter(review -> review.getArticle().getState() == ArticleState.REVIEWED).collect(Collectors.toList());
-        return reviews.stream().map(review -> new ReviewArticleVM(review.getArticle(), review)).collect(Collectors.toList());
+    public Set<ReviewArticleVM> getAssigned(User user) {
+        Set<Review> reviews = reviewRepository.findByUserAndEvaluationIsNull(user);
+        reviews = reviews.stream().filter(review -> review.getArticle().getState() == ArticleState.REVIEWED).collect(Collectors.toSet());
+        return reviews.stream().map(review -> new ReviewArticleVM(review.getArticle(), review)).collect(Collectors.toSet());
     }
 
     public void updateOrCreateReview(User user, Review review) {
@@ -51,9 +51,9 @@ public class ReviewService {
         reviewRepository.save(reviewInDB);
     }
 
-    public List<ReviewVM> getMyReviews(User user) {
-        List<Review> reviews = reviewRepository.findByUserAndEvaluationIsNotNull(user);
-        return reviews.stream().map(ReviewVM::new).collect(Collectors.toList());
+    public Set<ReviewVM> getMyReviews(User user) {
+        Set<Review> reviews = reviewRepository.findByUserAndEvaluationIsNotNull(user);
+        return reviews.stream().map(ReviewVM::new).collect(Collectors.toSet());
     }
 
     public ReviewVM getReview(Long reviewId, User user) {

@@ -10,11 +10,12 @@ import cz.zcu.students.cacha.cms_server.view_models.UserVM;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.*;
+import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.ROLE_AUTHOR;
+import static cz.zcu.students.cacha.cms_server.shared.RolesConstants.ROLE_REVIEWER;
 
 @Service
 public class AdminUserService {
@@ -25,9 +26,9 @@ public class AdminUserService {
     @Autowired
     private RoleRepository roleRepository;
 
-    public List<UserVM> getNonAdminUsers() {
-        List<User> users = userRepository.getNonAdminUsers();
-        return users.stream().map(UserVM::new).collect(Collectors.toList());
+    public Set<UserVM> getNonAdminUsers() {
+        Set<User> users = userRepository.getNonAdminUsers();
+        return users.stream().map(UserVM::new).collect(Collectors.toSet());
     }
 
     public void setAuthor(Long id, Boolean value) {
@@ -42,7 +43,7 @@ public class AdminUserService {
             Role role = roleRepository.findByName(ROLE_AUTHOR);
             user.getRoles().add(role);
         } else {
-            user.setRoles(user.getRoles().stream().filter(role -> !role.getName().equals(ROLE_AUTHOR)).collect(Collectors.toList()));
+            user.setRoles(user.getRoles().stream().filter(role -> !role.getName().equals(ROLE_AUTHOR)).collect(Collectors.toSet()));
         }
 
         userRepository.save(user);
@@ -60,7 +61,7 @@ public class AdminUserService {
             Role role = roleRepository.findByName(ROLE_REVIEWER);
             user.getRoles().add(role);
         } else {
-            user.setRoles(user.getRoles().stream().filter(role -> !role.getName().equals(ROLE_REVIEWER)).collect(Collectors.toList()));
+            user.setRoles(user.getRoles().stream().filter(role -> !role.getName().equals(ROLE_REVIEWER)).collect(Collectors.toSet()));
         }
 
         userRepository.save(user);

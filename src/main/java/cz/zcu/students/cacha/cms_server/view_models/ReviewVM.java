@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewVM {
 
-    private long id;
+    private Long id;
     private String articleName;
     private String articleAuthor;
     private String evaluation;
